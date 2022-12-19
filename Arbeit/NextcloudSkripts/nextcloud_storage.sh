@@ -1,27 +1,47 @@
 #!/bin/bash
 
-#TODO: everything with check/if
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
 
-#check for available space (in GB) and not free space (in %)
-#from followig commands:
-df -h
-echo "\n--------------\n There are $free % on nextcloud available \n--------------\n"
-echo "\n--------------\n Continuing to resize storage \n--------------\n"
-echo "\n--------------\n No resize needed \n--------------\n"
+freep = $(df -h | awk 'NR == 2{printf $5}' | cut -d '%' -f 1)
+frees = $(df -h | awk 'NR == 2{printf $5}' | cut -d 'G' -f 1)
 #/dev/mapper/vg_data-srv_nextcloud_data xxxG xxG xxxG xx% /srv/nextcloud_data
-vgdisplay vg_data
-echo "\n--------------\n There are $available GiB Space still available \n--------------\n"
-#Free PE / Size xxxxxx / xxx,xx GiB
-#if certain threshold matched (in %)
-# -> resize volume with size (arbitrary if no shell parameter)
-echo "\n--------------\n No size given using, Resizing with +50GB \n--------------\n"
+echo "\n--------------\n There are $freep % on nextcloud available \n--------------\n"
 
-lvresize -r -L +50G /dev/mapper/vg_data-srv_nextcloud_data
-echo "\n--------------\n Succesfully resized with +50GB \n--------------\n"
-echo "\n--------------\n There are $available GiB - 50GB Space still available \n--------------\n"
+if [ $free -ne 60 ]
+  then 
+    echo "\n--------------\n No resize needed \n--------------\n"
+    echo "\n--------------\n Done \n--------------\n"
 
-lvresize -r -L +$1G /dev/mapper/vg_data-srv_nextcloud_data
-echo "\n--------------\n Succesfully resized with +$1 \n--------------\n"
-echo "\n--------------\n There are $available GiB - $1 Space still available \n--------------\n"
+    exit
 
+else 
+    vgdisplay vg_data
+    echo "\n--------------\n There are $available GiB Space still available \n--------------\n"
+    #Free PE / Size xxxxxx / xxx,xx GiB
+
+    if [ -z "$1" ]
+      then
+        echo "\n--------------\n No size given using, Resizing with +50GB \n--------------\n"
+        lvresize -r -L +50G /dev/mapper/vg_data-srv_nextcloud_data
+        echo "\n--------------\n Succesfully resized with +50GB \n--------------\n"
+        echo "\n--------------\n There are $available GiB - 50GB Space still available \n--------------\n"
+
+    elif [ $1 -ge $available ]
+      then
+        echo "\n--------------\n Given size greater then available space, Resizing with +50GB \n--------------\n"
+        lvresize -r -L +50G /dev/mapper/vg_data-srv_nextcloud_data
+        echo "\n--------------\n Succesfully resized with +50GB \n--------------\n"
+
+    else 
+        lvresize -r -L +$1G /dev/mapper/vg_data-srv_nextcloud_data
+        echo "\n--------------\n Succesfully resized with +$1 \n--------------\n"
+        newspace = $available - $1
+
+        echo "\n--------------\n There are $newspace GiB Space still available \n--------------\n"
+
+    fi
+fi
 echo "\n--------------\n Done \n--------------\n"

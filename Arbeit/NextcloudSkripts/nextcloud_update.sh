@@ -1,8 +1,17 @@
 #!/bin/bash
 
 #TOOO:
-#check if running as sudo
-#check for shell parameter and check in which directory
+#check in which directory
+
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as sudo"
+  exit
+fi
+
+if [ -z "$1" ]
+  then
+    echo "No argument supplied"
+fi
 
 -u www-data php /srv/www/cloud.saralon.com/htdocs/occ maintenance:mode --on
 echo "\n--------------\n Server in Maintenance-Mode \n--------------\n"
