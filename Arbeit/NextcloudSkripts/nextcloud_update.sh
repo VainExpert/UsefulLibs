@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#TOOO:
-#check in which directory
-
 if [ "$EUID" -ne 0 ]
   then echo "Please run as sudo"
   exit
@@ -13,6 +10,11 @@ if [ -z "$1" ]
     echo "No argument supplied"
 fi
 
+if [ $PWD -ne "/srv/www/cloud.saralon.com" ]
+  then
+    cd /srv/www/cloud.saralon.com
+
+fi 
 -u www-data php /srv/www/cloud.saralon.com/htdocs/occ maintenance:mode --on
 echo "\n--------------\n Server in Maintenance-Mode \n--------------\n"
 -u sys.backup usr/local/bin/backup_db.sh /var/backups/backup_db
