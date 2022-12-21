@@ -6,6 +6,6 @@ if [ "$EUID" -ne 0 ]
 fi
 
 apt-get update
-echo "\n--------------\n Halfway There \n--------------\n"
+echo -e "\n----------------------------\n Halfway There \n----------------------------\n"
 apt-get dist-upgrade
-echo "\n--------------\n Done \n--------------\\n"
+echo "\n----------------------------\n Done \n----------------------------\n"

@@ -7,5 +7,5 @@ fi
 
 rm -rf /srv/www/cloud.saralon.com/htdocs.old
 rm /srv/www/cloud.saralon.com/nextcloud*.tar.bz2
-echo "\n--------------\n Removed successfully \n--------------\n"
-echo "\n--------------\n Done \n--------------\n"
+echo -e "\n----------------------------\n Removed successfully \n----------------------------\n"
+echo -e "\n----------------------------\n Done \n----------------------------\n"
