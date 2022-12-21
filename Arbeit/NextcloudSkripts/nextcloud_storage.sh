@@ -25,7 +25,7 @@ else
     if [ -z "$1" ]
       then
         echo -e "\n----------------------------\n No size given using, Resizing with +50GB \n----------------------------\n"
-        lvresize -r -L +50G-e  /dev/mapper/vg_data-srv_nextcloud_data
+        sudo lvresize -r -L +50G-e  /dev/mapper/vg_data-srv_nextcloud_data
         echo "\n----------------------------\n Succesfully resized with +50GB \n----------------------------\n"
         newspace=$available - 50
         newfree=$frees + 50
@@ -35,7 +35,7 @@ else
     elif [ $1 -ge $available ]
       then
         echo -e "\n----------------------------\n Given size greater then available space, Resizing with +50GB \n----------------------------\n"
-        lvresize -r -L +50G /dev/mapper/vg_data-srv_nextcloud_data
+        sudo lvresize -r -L +50G /dev/mapper/vg_data-srv_nextcloud_data
         echo -e "\n----------------------------\n Succesfully resized with +50GB \n----------------------------\n"
         newspace=$available - 50
         newfree=$frees + 50
@@ -43,7 +43,7 @@ else
         echo -e "\n----------------------------\n There are $newfree GB Space available on the NextCloud \n----------------------------\n"
 
     else 
-        lvresize -r -L +$1G /dev/mapper/vg_data-srv_nextcloud_data
+        sudo lvresize -r -L +$1G /dev/mapper/vg_data-srv_nextcloud_data
         echo -e "\n----------------------------\n Succesfully resized with +$1 \n----------------------------\n"
         newspace=$available - $1
         newfree=$frees + $1

@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-rm -rf /srv/www/cloud.saralon.com/htdocs.old
-rm /srv/www/cloud.saralon.com/nextcloud*.tar.bz2
+sudo rm -rf /srv/www/cloud.saralon.com/htdocs.old
+sudo rm /srv/www/cloud.saralon.com/nextcloud*.tar.bz2
 echo -e "\n----------------------------\n Removed successfully \n----------------------------\n"
 echo -e "\n----------------------------\n Done \n----------------------------\n"

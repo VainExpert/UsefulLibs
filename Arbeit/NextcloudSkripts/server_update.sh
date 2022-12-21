@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-apt-get update
+sudo apt-get update
 echo -e "\n----------------------------\n Halfway There \n----------------------------\n"
-apt-get dist-upgrade
+sudo apt-get dist-upgrade
 echo "\n----------------------------\n Done \n----------------------------\n"

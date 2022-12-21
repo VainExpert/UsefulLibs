@@ -21,17 +21,19 @@ sudo -u www-data php /srv/www/cloud.saralon.com/htdocs/occ maintenance:mode --on
 echo -e "\n----------------------------\n Server in Maintenance-Mode \n----------------------------\n"
 sudo -u sys.backup usr/local/bin/backup_db.sh /var/backups/backup_db
 echo -e "\n----------------------------\n Database backuped \n----------------------------\n"
-wget $1
-tar -xf nextcloud*.tar.bz2
+sudo tar -czf /srv/www/cloud.saralon.com.bak.tar.gz /srv/www/cloud.saralon.com
+echo -e "\n----------------------------\n Webroot of Nextcloud saved \n----------------------------\n"
+sudo wget $1
+sudo tar -xf nextcloud*.tar.bz2
 echo -e "\n----------------------------\n New Release downloaded \n----------------------------\n"
-cp -a htdocs/.well-known nextcloud
-cp -a htdocs/config nextcloud
+sudo cp -a htdocs/.well-known nextcloud
+sudo cp -a htdocs/config nextcloud
 echo -e "\n----------------------------\n Config and Extras copied \n----------------------------\n"
-chown -R www-data:www-data nextcloud/*
-chown root:root nextcloud
+sudo chown -R www-data:www-data nextcloud/*
+sudo chown root:root nextcloud
 echo -e "\n----------------------------\n Ownerships changed \n----------------------------\n"
-mv hdocs htdocs.old
-mv nextcloud htdocs
+sudo mv hdocs htdocs.old
+sudo mv nextcloud htdocs
 echo -e "\n----------------------------\n New Version active \n----------------------------\n"
 sudo -u www-data php /srv/www/cloud.saralon.com/htdocs/occ upgrade
 echo -e "\n----------------------------\n Datastructure upgrade \n----------------------------\n"
