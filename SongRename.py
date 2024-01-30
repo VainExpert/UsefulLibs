@@ -26,7 +26,7 @@ def prettyPrinting(dir):
 	global col_width
 	col_width = max(len(row) for row in temp) + 2  # padding
 	
-	for row in data:
+	for row in dir:
 		print("".join(word.ljust(col_width) for word in row))
 
 #
@@ -71,6 +71,7 @@ def parseInfos(InfoDict):
         writer = writer[len("Writer(s):"):-len(" Lyrics powered by www.musixmatch.com")]
         writer = writer.strip().split(", ")
 
+
         artist = parseArtist(artist)
 
         dances, popularity, genres, bpm = parseDances(title, artist)
@@ -111,6 +112,7 @@ def parseInfos(InfoDict):
 #
 def parseArtist(artist):
 
+    #True Copy orignal artist
     global originalartist
     originalartist = artist
     split = False
@@ -143,19 +145,18 @@ def parseArtist(artist):
             artist = originalartist.split(", ")
             split = True
 
-
         originalartist = originalartist.replace(", ", " feat. ")
 
     if "&" in originalartist:
         
         if split:
             idx = 0
-            for art in artist:
-                
+
+            for art in artist: 
                 if "&" in art:
-                    art.split(" & ")
+                    art = art.split(" & ")
                     replaced = True
-                    
+
                     for a in art:
                         if replaced:
                             artist[idx] = a
@@ -179,7 +180,6 @@ def parseArtist(artist):
                     art = art.replace("/", " ")
         
         originalartist = originalartist.replace("/", " ")
-        
 
     return artist    
 
@@ -271,15 +271,19 @@ def refurbishSong(file, information):
 
 
     if "- Single" in information['album']:
-        information['albumartist'] = 'Various Artists'
-        information['album'] = 'Single'
+        if isinstance(information['artist'], list):
+            information['albumartist'] = information['artist'][0]
+        else:
+            information['albumartist'] = information['artist']
+        information['album'] = 'Singles'
 
-    if "feat." in originalartist:
-        information['albumartist'] = information['artist'][0]
+    if information['albumartist'] == '' and information['album'] != '':
+        if isinstance(information['artist'], list):
+            information['albumartist'] = information['artist'][0]
+        else:
+            information['albumartist'] = information['artist']
 
-    elif len(information['artist']) > 1:
-        information['albumartist'] = 'Various Artists'
-        information['album'] = 'Single'
+    print(information)
 
     meta['title'] = information['title']
     meta['artist'] = information['artist']
@@ -299,16 +303,16 @@ def refurbishSong(file, information):
     newname = "{} - {}.mp3".format(originalartist, information['title'])
     newpath = "C:/Users/Tom/Music/" + newname
 
-    if not os.path.exists(newpath):
-        os.rename(filepath, newpath)
-        print("{} => {}".format(filepath, newpath))
+    #if not os.path.exists(newpath):
+        #os.rename(filepath, newpath)
+    print("{} => {}".format(filepath, newpath))
 
-    else:
-        os.remove(newpath)
-        os.rename(filepath, newpath)
-        print("{} => {}".format(filepath.ljust(col_width), newpath))
+    #else:
+        #os.remove(newpath)
+        #os.rename(filepath, newpath)
+        #print("{} => {}".format(filepath.ljust(col_width), newpath))
 
-    meta.save(newpath, v1=2, v2_version=4)
+    #meta.save(newpath, v1=2, v2_version=4)
 
 
 
@@ -316,10 +320,10 @@ def refurbishSong(file, information):
 print("\nSongs umbenennen und taggen - V1.0: \n")
 
 global path
-path = "C:/Users/Tom/Videos/4K Video Downloader/"
+path = "C:/Users/tom02/Documents/Coding/Code/PythonTests/"
 files = os.listdir(path)
 
-prettyPrinting(files)
+#prettyPrinting(files)
 
 nodata = []
 loop = asyncio.get_event_loop()
